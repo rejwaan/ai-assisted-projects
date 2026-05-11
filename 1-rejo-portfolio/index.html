@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Rejo — Self-taught developer exploring front-end creativity and intelligent systems." />
+  <title>Rejo | Developer Portfolio</title>
+
+  <!-- Google Fonts: Syne (display) + JetBrains Mono (code) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Phosphor Icons (lightweight icon set) -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========== LOADING SCREEN ========== -->
+  <div id="loader" class="loader">
+    <div class="loader-terminal">
+      <span class="loader-prompt">~/rejo</span>
+      <span class="loader-cursor" id="loader-text"></span>
+      <span class="loader-blink">▋</span>
+    </div>
+  </div>
+
+  <!-- ========== SCROLL PROGRESS BAR ========== -->
+  <div id="scroll-progress" class="scroll-progress"></div>
+
+  <!-- ========== NAVBAR ========== -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <!-- Logo -->
+      <a href="#hero" class="nav-logo">
+        <span class="logo-bracket">[</span>rejo<span class="logo-bracket">]</span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="nav-links" id="nav-links">
+        <a href="#about" class="nav-link">about</a>
+        <a href="#skills" class="nav-link">skills</a>
+        <a href="#projects" class="nav-link">projects</a>
+        <a href="#education" class="nav-link">education</a>
+        <a href="#contact" class="nav-link">contact</a>
+      </nav>
+
+      <!-- Controls -->
+      <div class="nav-controls">
+        <!-- Dark/Light Toggle -->
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+          <i class="ph ph-moon" id="theme-icon"></i>
+        </button>
+
+        <!-- Hamburger (mobile) -->
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#about" class="mobile-link">about</a>
+      <a href="#skills" class="mobile-link">skills</a>
+      <a href="#projects" class="mobile-link">projects</a>
+      <a href="#education" class="mobile-link">education</a>
+      <a href="#contact" class="mobile-link">contact</a>
+    </div>
+  </header>
+
+  <!-- ========== HERO SECTION ========== -->
+  <section id="hero" class="hero section">
+    <!-- Ambient background glows -->
+    <div class="glow glow-1" aria-hidden="true"></div>
+    <div class="glow glow-2" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <!-- Terminal window -->
+      <div class="terminal-window fade-in" style="--delay: 0.1s">
+        <div class="terminal-bar">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span class="terminal-title">~/rejo — bash</span>
+        </div>
+        <div class="terminal-body">
+          <p class="terminal-line">
+            <span class="t-prompt">rejo@dev</span><span class="t-sep">:</span><span class="t-path">~</span><span class="t-sep">$</span>
+            <span class="t-cmd"> whoami</span>
+          </p>
+          <p class="terminal-output" id="typing-output"></p>
+          <p class="terminal-line blink-line">
+            <span class="t-prompt">rejo@dev</span><span class="t-sep">:</span><span class="t-path">~</span><span class="t-sep">$</span>
+            <span class="t-cursor">▋</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Main heading -->
+      <div class="hero-text fade-in" style="--delay: 0.3s">
+        <p class="hero-greeting">Hello, world. I'm</p>
+        <h1 class="hero-name">Rejo<span class="accent-dot">.</span></h1>
+        <p class="hero-tagline">Self-taught developer exploring the intersection of<br />
+          <em>front-end creativity</em> and <em>intelligent systems.</em>
+        </p>
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="hero-cta fade-in" style="--delay: 0.5s">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+      </div>
+
+      <!-- Status badge -->
+      <div class="hero-status fade-in" style="--delay: 0.7s">
+        <span class="status-dot"></span>
+        <span class="status-text">Currently learning &mdash; JavaScript &bull; Python &bull; Linux</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT SECTION ========== -->
+  <section id="about" class="about section reveal">
+    <div class="container">
+      <div class="section-label">01 / about</div>
+      <h2 class="section-title">About Me</h2>
+
+      <div class="about-grid">
+        <!-- Text -->
+        <div class="about-text">
+          <p>
+            I'm <strong>Rejo</strong>, a self-taught front-end developer currently pursuing a
+            diploma in <em>Computer Science and Technology</em>. My journey started with curiosity —
+            and it hasn't stopped since.
+          </p>
+          <p>
+            I spend most of my time building things with <strong>HTML, CSS, and JavaScript</strong>,
+            writing automation scripts in <strong>Python</strong>, and navigating life through a
+            <strong>Linux terminal</strong>. I believe in learning by doing — every project teaches
+            me something the classroom doesn't.
+          </p>
+          <p>
+            My long-term goal is to grow into an <strong>AI Engineer</strong> — someone who can
+            bridge the gap between thoughtful user interfaces and intelligent backend systems.
+            I'm building that foundation one line of code at a time.
+          </p>
+          <p class="about-quote">
+            <span class="quote-mark">"</span>Consistent small steps. That's the whole strategy.
+            <span class="quote-mark">"</span>
+          </p>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="about-cards">
+          <div class="info-card">
+            <i class="ph ph-map-pin info-icon"></i>
+            <div>
+              <span class="info-label">Location</span>
+              <span class="info-value">Bangladesh</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <i class="ph ph-graduation-cap info-icon"></i>
+            <div>
+              <span class="info-label">Education</span>
+              <span class="info-value">Diploma — CST (Year 3)</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <i class="ph ph-desktop info-icon"></i>
+            <div>
+              <span class="info-label">Environment</span>
+              <span class="info-value">Ubuntu Linux / Fish Shell</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <i class="ph ph-target info-icon"></i>
+            <div>
+              <span class="info-label">Goal</span>
+              <span class="info-value">AI Engineer</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <i class="ph ph-code info-icon"></i>
+            <div>
+              <span class="info-label">Focus</span>
+              <span class="info-value">Front-end + Python</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <i class="ph ph-coffee info-icon"></i>
+            <div>
+              <span class="info-label">Personality</span>
+              <span class="info-value">Calm. Consistent. Creative.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SKILLS SECTION ========== -->
+  <section id="skills" class="skills section reveal">
+    <div class="container">
+      <div class="section-label">02 / skills</div>
+      <h2 class="section-title">Tech Stack</h2>
+      <p class="section-sub">Tools and technologies I work with regularly.</p>
+
+      <div class="skills-grid">
+        <!-- Each skill card -->
+        <div class="skill-card">
+          <div class="skill-icon">
+            <i class="ph ph-file-html"></i>
+          </div>
+          <h3 class="skill-name">HTML</h3>
+          <p class="skill-desc">Semantic markup, accessibility, structure.</p>
+          <div class="skill-bar"><div class="skill-fill" style="--pct: 88%"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <i class="ph ph-paint-brush"></i>
+          </div>
+          <h3 class="skill-name">CSS</h3>
+          <p class="skill-desc">Layouts, animations, responsive design.</p>
+          <div class="skill-bar"><div class="skill-fill" style="--pct: 82%"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <i class="ph ph-lightning"></i>
+          </div>
+          <h3 class="skill-name">JavaScript</h3>
+          <p class="skill-desc">DOM, events, async, vanilla JS.</p>
+          <div class="skill-bar"><div class="skill-fill" style="--pct: 60%"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <i class="ph ph-snake"></i>
+          </div>
+          <h3 class="skill-name">Python</h3>
+          <p class="skill-desc">Scripting, automation, basic backend.</p>
+          <div class="skill-bar"><div class="skill-fill" style="--pct: 65%"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <i class="ph ph-coffee"></i>
+          </div>
+          <h3 class="skill-name">Java</h3>
+          <p class="skill-desc">OOP fundamentals, academic projects.</p>
+          <div class="skill-bar"><div class="skill-fill" style="--pct: 50%"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <i class="ph ph-git-branch"></i>
+          </div>
+          <h3 class="skill-name">Git & GitHub</h3>
+          <p class="skill-desc">Version control, collaboration, open source.</p>
+          <div class="skill-bar"><div class="skill-fill" style="--pct: 72%"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-icon">
+            <i class="ph ph-terminal"></i>
+          </div>
+          <h3 class="skill-name">Linux</h3>
+          <p class="skill-desc">Ubuntu, Fish shell, CLI tools, filesystem.</p>
+          <div class="skill-bar"><div class="skill-fill" style="--pct: 68%"></div></div>
+        </div>
+
+        <div class="skill-card skill-card-future">
+          <div class="skill-icon">
+            <i class="ph ph-brain"></i>
+          </div>
+          <h3 class="skill-name">AI / ML <span class="badge">Learning</span></h3>
+          <p class="skill-desc">Future engineering direction. In progress.</p>
+          <div class="skill-bar"><div class="skill-fill" style="--pct: 20%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PROJECTS SECTION ========== -->
+  <section id="projects" class="projects section reveal">
+    <div class="container">
+      <div class="section-label">03 / projects</div>
+      <h2 class="section-title">Projects</h2>
+      <p class="section-sub">A few things I've built while learning the craft.</p>
+
+      <div class="projects-grid">
+
+        <!-- Project 1 -->
+        <article class="project-card">
+          <div class="project-header">
+            <div class="project-icon-wrap">
+              <i class="ph ph-film-strip"></i>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/rejwaan" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+                <i class="ph ph-github-logo"></i>
+              </a>
+              <a href="#" title="Live Demo" aria-label="Demo">
+                <i class="ph ph-arrow-square-out"></i>
+              </a>
+            </div>
+          </div>
+          <h3 class="project-title">AnimeVerse UI</h3>
+          <p class="project-desc">
+            A clean, dark-themed anime discovery interface. Browse trending series,
+            filter by genre, and save favorites. Focused on smooth UX with CSS
+            animations and a mobile-first layout.
+          </p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Fetch API</span>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project-card">
+          <div class="project-header">
+            <div class="project-icon-wrap">
+              <i class="ph ph-terminal-window"></i>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/rejwaan" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+                <i class="ph ph-github-logo"></i>
+              </a>
+              <a href="#" title="Live Demo" aria-label="Demo">
+                <i class="ph ph-arrow-square-out"></i>
+              </a>
+            </div>
+          </div>
+          <h3 class="project-title">LinuxFlow Dashboard</h3>
+          <p class="project-desc">
+            A terminal-inspired system monitor dashboard UI. Displays simulated
+            CPU/memory stats, a command log, and a file tree panel. Built with
+            pure CSS grid and vanilla JS — no backend needed.
+          </p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS Grid</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Dark UI</span>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project-card">
+          <div class="project-header">
+            <div class="project-icon-wrap">
+              <i class="ph ph-check-square"></i>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/rejwaan" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+                <i class="ph ph-github-logo"></i>
+              </a>
+              <a href="#" title="Live Demo" aria-label="Demo">
+                <i class="ph ph-arrow-square-out"></i>
+              </a>
+            </div>
+          </div>
+          <h3 class="project-title">DevTrack</h3>
+          <p class="project-desc">
+            A minimal productivity app for developers. Track daily coding goals,
+            log completed tasks, and visualize weekly progress — all stored in
+            localStorage. Python automation script included for CSV export.
+          </p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Python</span>
+            <span class="tag">localStorage</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== EDUCATION SECTION ========== -->
+  <section id="education" class="education section reveal">
+    <div class="container">
+      <div class="section-label">04 / education</div>
+      <h2 class="section-title">Education</h2>
+
+      <div class="edu-timeline">
+
+        <div class="edu-item">
+          <div class="edu-dot"></div>
+          <div class="edu-card">
+            <div class="edu-header">
+              <div>
+                <h3 class="edu-degree">Diploma in Computer Science & Technology</h3>
+                <p class="edu-school">Polytechnic Institute, Bangladesh</p>
+              </div>
+              <span class="edu-badge">Year 3 / 4</span>
+            </div>
+            <p class="edu-desc">
+              Covering core computer science fundamentals — programming, networking,
+              database management, and system design. Complemented by significant
+              self-directed learning in front-end development and Python.
+            </p>
+            <div class="edu-tags">
+              <span class="tag">2022 – Present</span>
+              <span class="tag">In Progress</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-dot edu-dot-self"></div>
+          <div class="edu-card">
+            <div class="edu-header">
+              <div>
+                <h3 class="edu-degree">Self-Directed Learning</h3>
+                <p class="edu-school">Internet, Docs, and Consistent Practice</p>
+              </div>
+              <span class="edu-badge edu-badge-self">Ongoing</span>
+            </div>
+            <p class="edu-desc">
+              MDN Web Docs, freeCodeCamp, YouTube, and daily coding practice.
+              Topics: front-end development, Linux CLI, Python scripting,
+              Git workflows, and prompt engineering for AI tools.
+            </p>
+            <div class="edu-tags">
+              <span class="tag">HTML/CSS/JS</span>
+              <span class="tag">Python</span>
+              <span class="tag">Linux</span>
+              <span class="tag">Git</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT SECTION ========== -->
+  <section id="contact" class="contact section reveal">
+    <div class="container">
+      <div class="section-label">05 / contact</div>
+      <h2 class="section-title">Get in Touch</h2>
+      <p class="section-sub">
+        Open to collaboration, feedback, or just a good tech conversation.
+      </p>
+
+      <div class="contact-grid">
+        <!-- Email card -->
+        <a href="mailto:zerocode880@gmail.com" class="contact-card contact-email">
+          <i class="ph ph-envelope-simple contact-card-icon"></i>
+          <div>
+            <span class="contact-label">Email</span>
+            <span class="contact-value">zerocode880@gmail.com</span>
+          </div>
+        </a>
+
+        <!-- Social links -->
+        <div class="social-links">
+          <a href="https://github.com/rejwaan" target="_blank" rel="noopener" class="social-link" aria-label="GitHub">
+            <i class="ph ph-github-logo"></i>
+            <span>GitHub</span>
+          </a>
+          <a href="https://www.linkedin.com/in/md-rejwan-7a0483324/" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
+            <i class="ph ph-linkedin-logo"></i>
+            <span>LinkedIn</span>
+          </a>
+          <a href="https://x.com/rezesu8" target="_blank" rel="noopener" class="social-link" aria-label="X / Twitter">
+            <i class="ph ph-x-logo"></i>
+            <span>X / Twitter</span>
+          </a>
+          <a href="https://www.facebook.com/md.rejwan.3701/" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+            <i class="ph ph-facebook-logo"></i>
+            <span>Facebook</span>
+          </a>
+        </div>
+
+        <!-- CV Download -->
+        <!-- 
+          HOW TO REPLACE CV:
+          1. Export your CV as a PDF named "rejo-cv.pdf"
+          2. Place it in the same folder as index.html
+          3. The download button below will serve it automatically
+        -->
+        <a href="rejo-cv.pdf" download="Rejo_CV.pdf" class="btn btn-primary cv-btn">
+          <i class="ph ph-download-simple"></i>
+          Download CV
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-sig">
+        <span class="footer-code">// </span>designed &amp; built by
+        <span class="footer-name">rejo</span>
+        <span class="footer-code"> — </span>
+        <span class="footer-year">2025</span>
+      </p>
+      <p class="footer-stack">
+        <span class="footer-code">stack: </span>html · css · vanilla js
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
