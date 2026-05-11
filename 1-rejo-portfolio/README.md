@@ -5,7 +5,7 @@ This is a personal portfolio website built using HTML, CSS, and JavaScript with 
 The project focuses on practicing frontend fundamentals, UI design, and responsive layout implementation.
 
 ## 🔗 Live Demo
-  https://your-netlify-link.netlify.app
+  https://rejo.netlify.app
 
 ## Tech Stack
 - HTML
