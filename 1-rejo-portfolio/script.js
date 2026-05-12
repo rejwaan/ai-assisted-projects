@@ -1,354 +1,310 @@
-/**
- * script.js
- * REJO — Personal Portfolio
- *
- * Functionality:
- * - Loader screen with typing effect
- * - Scroll progress indicator
- * - Navbar background change on scroll
- * - Active nav link highlighting based on scroll position
- * - Mobile hamburger menu toggle
- * - Dark/Light theme toggle with localStorage persistence
- * - Scroll reveal animation for sections
- * - Smooth scrolling for navigation links
- * - Typing effect in Hero terminal
- */
+/* ============================================================
+   REJO — Portfolio JavaScript
+   ============================================================
+   Sections:
+   1. Loader
+   2. Scroll Progress Bar
+   3. Navbar — scroll state + active link highlight
+   4. Hamburger / Mobile Menu
+   5. Dark / Light Theme Toggle
+   6. Hero Typing Effect
+   7. Scroll Reveal Animation
+   8. Skill Bar Animation (triggered on scroll)
+   9. Smooth close mobile menu on link click
+   ============================================================ */
 
-// ============================================================
-// 1. LOADER SCREEN WITH TYPING EFFECT
-// ============================================================
+
+/* ============================================================
+   UTILITY — wait for DOM to be ready
+   ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
-  const loader = document.getElementById('loader');
-  const loaderTextSpan = document.getElementById('loader-text');
 
-  if (loader && loaderTextSpan) {
-    const messages = [
-      'whoami',
-      '> rejo',
-    //   '> self-taught developer',
-    //   '> exploring front-end & AI',
-    //   '> system ready.',
-    ];
-    let messageIndex = 0;
-    let charIndex = 0;
-    let currentMessage = '';
-    let isDeleting = false;
+  /* ----------------------------------------------------------
+     1. LOADER
+     Shows a fake terminal boot sequence, then fades out.
+     To change the boot text: edit the `steps` array below.
+  ---------------------------------------------------------- */
+  const loader     = document.getElementById('loader');
+  const loaderText = document.getElementById('loader-text');
 
-    function typeLoaderEffect() {
-      // Get current message based on index
-      if (messageIndex < messages.length) {
-        currentMessage = messages[messageIndex];
-      } else {
-        // If all messages are done, exit loader after a short delay
-        setTimeout(() => {
-          if (loader) {
-            loader.classList.add('hidden');
-          }
-        }, 600);
-        return;
-      }
+  // Steps shown one by one in the loader terminal
+  const steps = [
+    'initializing...',
+    'loading modules...',
+    'booting portfolio...',
+    'welcome, rejo.'
+  ];
 
-      if (!isDeleting && charIndex <= currentMessage.length) {
-        // Typing phase
-        loaderTextSpan.textContent = currentMessage.substring(0, charIndex);
-        charIndex++;
-        setTimeout(typeLoaderEffect, 80);
-      } else if (isDeleting && charIndex >= 0) {
-        // Deleting phase (optional but adds nice effect)
-        loaderTextSpan.textContent = currentMessage.substring(0, charIndex);
-        charIndex--;
-        setTimeout(typeLoaderEffect, 40);
-      } else {
-        // Switch between typing and deleting
-        if (!isDeleting && charIndex > currentMessage.length) {
-          // Finished typing current message, wait then delete
-          isDeleting = true;
-          setTimeout(typeLoaderEffect, 1000);
-        } else if (isDeleting && charIndex < 0) {
-          // Finished deleting, move to next message
-          isDeleting = false;
-          messageIndex++;
-          charIndex = 0;
-          setTimeout(typeLoaderEffect, 200);
-        }
-      }
-    }
+  let stepIndex = 0;
 
-    // Start the typing effect for loader
-    typeLoaderEffect();
-  } else {
-    // If loader elements missing, just hide loader quickly
-    if (loader) {
-      setTimeout(() => loader.classList.add('hidden'), 500);
+  function runLoaderStep() {
+    if (stepIndex < steps.length) {
+      loaderText.textContent = steps[stepIndex];
+      stepIndex++;
+      // Each step shows for a short delay
+      setTimeout(runLoaderStep, stepIndex === steps.length ? 500 : 420);
+    } else {
+      // All steps done — hide the loader
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        // After loader hides, trigger hero animations
+        document.body.style.overflow = '';
+      }, 600);
     }
   }
-});
 
-// ============================================================
-// 2. SCROLL PROGRESS BAR
-// ============================================================
-const progressBar = document.getElementById('scroll-progress');
+  // Freeze scroll while loader is visible
+  document.body.style.overflow = 'hidden';
+  setTimeout(runLoaderStep, 300);
 
-function updateScrollProgress() {
-  if (!progressBar) return;
-  const winScroll = document.documentElement.scrollTop;
-  const height =
-    document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  const scrolled = (winScroll / height) * 100;
-  progressBar.style.width = scrolled + '%';
-}
 
-window.addEventListener('scroll', updateScrollProgress);
-updateScrollProgress();
+  /* ----------------------------------------------------------
+     2. SCROLL PROGRESS BAR
+     The thin line at the very top of the page.
+     Width grows as the user scrolls down.
+  ---------------------------------------------------------- */
+  const progressBar = document.getElementById('scroll-progress');
 
-// ============================================================
-// 3. NAVBAR BACKGROUND CHANGE ON SCROLL & ACTIVE LINK HIGHLIGHT
-// ============================================================
-const navbar = document.getElementById('navbar');
-const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('.nav-link');
-
-function handleNavbarScroll() {
-  if (!navbar) return;
-  if (window.scrollY > 20) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
+  function updateScrollProgress() {
+    // How far the page can scroll total
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    // How far we've scrolled right now
+    const scrolled   = window.scrollY;
+    // Convert to a percentage
+    const pct        = scrollable > 0 ? (scrolled / scrollable) * 100 : 0;
+    progressBar.style.width = pct + '%';
   }
-}
 
-function updateActiveNavLink() {
-  let current = '';
-  const scrollPos = window.scrollY + 150; // offset for better accuracy
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
 
-  sections.forEach((section) => {
-    const sectionTop = section.offsetTop;
-    const sectionHeight = section.offsetHeight;
-    if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-      current = section.getAttribute('id');
+
+  /* ----------------------------------------------------------
+     3. NAVBAR — scroll state + active section highlight
+     - Adds `.scrolled` class when user scrolls past 20px
+       (this triggers the frosted-glass background in CSS)
+     - Highlights the nav link matching the current section
+  ---------------------------------------------------------- */
+  const navbar   = document.getElementById('navbar');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('section[id]');
+
+  function updateNavbar() {
+    // Frosted glass effect after scrolling down
+    if (window.scrollY > 20) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
     }
-  });
 
-  navLinks.forEach((link) => {
-    link.classList.remove('active');
-    const href = link.getAttribute('href');
-    if (href && href.substring(1) === current) {
-      link.classList.add('active');
-    }
-  });
-}
+    // Active link: find which section is currently in view
+    let currentSection = '';
+    sections.forEach(sec => {
+      const top    = sec.offsetTop - 100;   // 100px offset for navbar height
+      const height = sec.offsetHeight;
+      if (window.scrollY >= top && window.scrollY < top + height) {
+        currentSection = sec.getAttribute('id');
+      }
+    });
 
-window.addEventListener('scroll', () => {
-  handleNavbarScroll();
-  updateActiveNavLink();
-});
-handleNavbarScroll();
-updateActiveNavLink();
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      // Match the link href (#about) with the section id (about)
+      if (link.getAttribute('href') === '#' + currentSection) {
+        link.classList.add('active');
+      }
+    });
+  }
 
-// ============================================================
-// 4. MOBILE HAMBURGER MENU TOGGLE
-// ============================================================
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobile-menu');
+  window.addEventListener('scroll', updateNavbar, { passive: true });
+  updateNavbar(); // Run once on load
 
-if (hamburger && mobileMenu) {
+
+  /* ----------------------------------------------------------
+     4. HAMBURGER MENU (mobile)
+     Toggles the mobile dropdown menu open/closed.
+     Also closes when a mobile link is clicked.
+  ---------------------------------------------------------- */
+  const hamburger  = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+
   hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     mobileMenu.classList.toggle('open');
-    // Prevent body scroll when menu is open (optional)
-    if (mobileMenu.classList.contains('open')) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
   });
 
-  // Close mobile menu when a link is clicked
-  const mobileLinks = document.querySelectorAll('.mobile-link');
-  mobileLinks.forEach((link) => {
+  // Close the mobile menu when any mobile nav link is clicked
+  mobileLinks.forEach(link => {
     link.addEventListener('click', () => {
       hamburger.classList.remove('active');
       mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
     });
   });
-}
 
-// Also close menu on window resize if it becomes visible desktop
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 768 && mobileMenu && mobileMenu.classList.contains('open')) {
-    mobileMenu.classList.remove('open');
-    if (hamburger) hamburger.classList.remove('active');
-    document.body.style.overflow = '';
+
+  /* ----------------------------------------------------------
+     5. DARK / LIGHT THEME TOGGLE
+     HOW IT WORKS:
+     - The <html> tag has data-theme="dark" by default (set in HTML)
+     - Toggling switches it to "dark" or "light"
+     - CSS variables in style.css respond to [data-theme="light"]
+     - The user's preference is saved in localStorage so it
+       persists when they revisit the page.
+
+     HOW TO CUSTOMIZE:
+     - Change color values in style.css under :root (dark)
+       and [data-theme="light"] (light)
+  ---------------------------------------------------------- */
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon   = document.getElementById('theme-icon');
+  const htmlEl      = document.documentElement;
+
+  // Load saved preference from localStorage (if any)
+  const savedTheme = localStorage.getItem('rejo-theme');
+  if (savedTheme) {
+    htmlEl.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
   }
-});
 
-// ============================================================
-// 5. DARK/LIGHT THEME TOGGLE WITH LOCALSTORAGE
-// ============================================================
-const themeToggle = document.getElementById('theme-toggle');
-const themeIcon = document.getElementById('theme-icon');
-
-function setTheme(theme) {
-  const root = document.documentElement;
-  if (theme === 'light') {
-    root.setAttribute('data-theme', 'light');
-    if (themeIcon) {
-      themeIcon.classList.remove('ph-moon');
-      themeIcon.classList.add('ph-sun');
-    }
-    localStorage.setItem('theme', 'light');
-  } else {
-    root.setAttribute('data-theme', 'dark');
-    if (themeIcon) {
-      themeIcon.classList.remove('ph-sun');
-      themeIcon.classList.add('ph-moon');
-    }
-    localStorage.setItem('theme', 'dark');
-  }
-}
-
-function toggleTheme() {
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  if (currentTheme === 'light') {
-    setTheme('dark');
-  } else {
-    setTheme('light');
-  }
-}
-
-// Load saved theme from localStorage
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme) {
-  setTheme(savedTheme);
-} else {
-  // Check system preference
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  setTheme(prefersDark ? 'dark' : 'light');
-}
-
-if (themeToggle) {
-  themeToggle.addEventListener('click', toggleTheme);
-}
-
-// ============================================================
-// 6. SCROLL REVEAL ANIMATION (Intersection Observer)
-// ============================================================
-const revealElements = document.querySelectorAll('.reveal');
-
-const revealObserver = new IntersectionObserver(
-  (entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        // Optional: unobserve after animation to improve performance
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  {
-    threshold: 0.1,
-    rootMargin: '0px 0px -10px 0px',
-  }
-);
-
-revealElements.forEach((el) => {
-  revealObserver.observe(el);
-});
-
-// ============================================================
-// 7. SMOOTH SCROLLING FOR NAVIGATION LINKS
-// ============================================================
-const allNavLinks = document.querySelectorAll(
-  '.nav-link, .mobile-link, .hero-cta .btn, .footer a[href^="#"]'
-);
-
-allNavLinks.forEach((link) => {
-  link.addEventListener('click', (e) => {
-    const href = link.getAttribute('href');
-    if (href && href.startsWith('#')) {
-      e.preventDefault();
-      const targetId = href.substring(1);
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        const offsetTop = targetElement.offsetTop - 70; // adjust for navbar height
-        window.scrollTo({
-          top: offsetTop,
-          behavior: 'smooth',
-        });
-        // Close mobile menu if open
-        if (mobileMenu && mobileMenu.classList.contains('open')) {
-          mobileMenu.classList.remove('open');
-          if (hamburger) hamburger.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      }
-    }
+  themeToggle.addEventListener('click', () => {
+    const current = htmlEl.getAttribute('data-theme');
+    const next    = current === 'dark' ? 'light' : 'dark';
+    htmlEl.setAttribute('data-theme', next);
+    localStorage.setItem('rejo-theme', next);
+    updateThemeIcon(next);
   });
-});
 
-// ============================================================
-// 8. HERO TERMINAL TYPING EFFECT
-// ============================================================
-const typingOutput = document.getElementById('typing-output');
-
-if (typingOutput) {
-  const heroMessages = [
-    '> rejo',
-    '> self-taught developer',
-    '> front-end & python',
-    '> exploring AI systems',
-  ];
-  let heroMsgIndex = 0;
-  let heroCharIndex = 0;
-  let heroCurrent = '';
-
-  function typeHeroEffect() {
-    if (heroMsgIndex >= heroMessages.length) {
-      // Stop typing effect once done
-      return;
-    }
-
-    heroCurrent = heroMessages[heroMsgIndex];
-    if (heroCharIndex <= heroCurrent.length) {
-      typingOutput.textContent = heroCurrent.substring(0, heroCharIndex);
-      heroCharIndex++;
-      setTimeout(typeHeroEffect, 70);
+  // Switch the button icon based on current theme
+  function updateThemeIcon(theme) {
+    if (theme === 'light') {
+      // Light mode — show moon icon (click to go dark)
+      themeIcon.className = 'ph ph-moon';
     } else {
-      // Move to next message after delay
-      heroMsgIndex++;
-      heroCharIndex = 0;
-      if (heroMsgIndex < heroMessages.length) {
-        // Add a line break and continue
-        typingOutput.innerHTML += '<br>';
-      }
-      setTimeout(typeHeroEffect, 300);
+      // Dark mode — show sun icon (click to go light)
+      themeIcon.className = 'ph ph-sun';
     }
   }
 
-  // Start hero typing effect after a slight delay (once loader is almost done)
-  setTimeout(() => {
-    typeHeroEffect();
-  }, 800);
-}
+  // Set correct icon on initial load
+  updateThemeIcon(htmlEl.getAttribute('data-theme'));
 
-// ============================================================
-// 9. ADDITIONAL POLISH: Prevent scroll progress flicker
-// ============================================================
-window.dispatchEvent(new Event('scroll'));
 
-// ============================================================
-// 10. HANDLE CV BUTTON FALLBACK (Optional: console feedback)
-// ============================================================
-const cvBtn = document.querySelector('.cv-btn');
-if (cvBtn) {
-  cvBtn.addEventListener('click', (e) => {
-    // If CV file doesn't exist, user will see a failed download.
-    // This is just to inform during development.
-    console.log('CV download attempted — ensure rejo-cv.pdf exists in the root folder.');
+  /* ----------------------------------------------------------
+     6. HERO TYPING EFFECT
+     Types out the terminal output line character by character.
+     To change the text: edit the `outputText` string below.
+  ---------------------------------------------------------- */
+  const typingTarget = document.getElementById('typing-output');
+  const outputText   = 'A self-taught dev. Front-end, Python, Linux, AI (someday).';
+
+  let charIndex  = 0;
+  let typingDone = false;
+
+  function typeNextChar() {
+    if (charIndex < outputText.length) {
+      typingTarget.textContent += outputText[charIndex];
+      charIndex++;
+      // Randomize delay slightly for a natural typing feel
+      const delay = 30 + Math.random() * 35;
+      setTimeout(typeNextChar, delay);
+    } else {
+      typingDone = true;
+    }
+  }
+
+  // Start typing after loader finishes (approximately)
+  setTimeout(typeNextChar, 1800);
+
+
+  /* ----------------------------------------------------------
+     7. SCROLL REVEAL ANIMATION
+     Any element with class `.reveal` fades in when it enters
+     the viewport. Uses IntersectionObserver (modern, efficient).
+
+     To make any element animate on scroll:
+     Just add class="reveal" to it in HTML.
+  ---------------------------------------------------------- */
+  const revealEls = document.querySelectorAll('.reveal');
+
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Stop observing once revealed (no repeat animation)
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.1,    // Trigger when 10% of element is visible
+      rootMargin: '0px 0px -50px 0px'  // Slightly before the bottom edge
+    }
+  );
+
+  revealEls.forEach(el => revealObserver.observe(el));
+
+
+  /* ----------------------------------------------------------
+     8. SKILL BAR ANIMATION
+     The skill progress bars animate (grow from 0 to their %)
+     when the Skills section scrolls into view.
+     Width is set via CSS variable --pct in the HTML.
+  ---------------------------------------------------------- */
+  const skillBars  = document.querySelectorAll('.skill-fill');
+  let skillsAnimated = false;
+
+  const skillObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !skillsAnimated) {
+          skillsAnimated = true;
+          skillBars.forEach((bar, i) => {
+            // Stagger each bar slightly
+            setTimeout(() => {
+              bar.style.animationPlayState = 'running';
+            }, i * 80);
+          });
+          skillObserver.disconnect();
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+
+  const skillsSection = document.getElementById('skills');
+  if (skillsSection) skillObserver.observe(skillsSection);
+
+  // Pause bars until triggered (they start paused via CSS)
+  skillBars.forEach(bar => {
+    bar.style.animationPlayState = 'paused';
   });
-}
 
-// ============================================================
-// End of script.js
-// ============================================================
+
+  /* ----------------------------------------------------------
+     9. SMOOTH SCROLL for anchor links
+     Handles cases where the built-in CSS scroll-behavior
+     might not account for the fixed navbar height offset.
+  ---------------------------------------------------------- */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+
+      const target = document.querySelector(targetId);
+      if (!target) return;
+
+      e.preventDefault();
+
+      const navbarHeight = navbar.offsetHeight;
+      const targetTop    = target.getBoundingClientRect().top + window.scrollY - navbarHeight;
+
+      window.scrollTo({
+        top:      targetTop,
+        behavior: 'smooth'
+      });
+    });
+  });
+
+
+}); // end DOMContentLoaded
